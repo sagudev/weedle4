@@ -1,0 +1,23 @@
+[package]
+name = "weedle4"
+version = "0.4.0"
+authors = ["Sharad Chand <sharad.d.chand@gmail.com>", "Jan-Erik Rediger <jrediger@mozilla.com>"]
+description = "A WebIDL Parser"
+license = "MIT"
+documentation = "https://docs.rs/weedle4"
+homepage = "https://github.com/sagudev/weedle4"
+repository = "https://github.com/sagudev/weedle4"
+readme = "./README.md"
+edition = "2021"
+# No need to include the large tests in the published package
+exclude = ["tests"]
+
+[lib]
+name = "weedle"
+
+[dependencies]
+nom = "7.1"
+
+[dev-dependencies]
+fs-err = "2.9"
+walkdir = "2"
