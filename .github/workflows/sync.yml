@@ -1,0 +1,39 @@
+name: Sync WebRef
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 1 1 * * *
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update submodule
+        id: submodule
+        run: |
+          git submodule init
+          git submodule sync
+          git submodule update
+          git submodule update --remote
+          echo "sha=$(git submodule status | cut -d ' ' -f2)" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "Sync WebRef"
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: Sync WebRef to ${{ steps.submodule.outputs.sha }}
+          branch: webref-sync
+          body: |
+            Update to https://github.com/w3c/webref/commit/${{ steps.submodule.outputs.sha }}
+
+      - name: Auto approve
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        run: gh pr review --approve "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
