@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches-ignore: webref-sync
   pull_request:
 
 env:
@@ -21,3 +22,8 @@ jobs:
       run: cargo build --verbose
     - name: Run tests
       run: cargo test --verbose
+    - name: Automerge
+      if: github.event_name == 'pull_request' && github.actor == 'bo-homu'
+      run: gh pr merge --merge --auto "${{ github.event.pull_request.number }}"
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
