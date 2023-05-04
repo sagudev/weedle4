@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches-ignore: webref-sync
   pull_request:
 
 env:
