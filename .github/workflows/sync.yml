@@ -3,7 +3,7 @@ name: WebRef Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: 1 1 * * *
+    - cron: 1 1 * * 2
 
 jobs:
   update:
@@ -34,6 +34,6 @@ jobs:
             WebRef updated to https://github.com/w3c/webref/commit/${{ steps.submodule.outputs.sha }}
       - name: Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
-        run: gh pr merge --rebase --auto "${{ steps.cpr.outputs.pull-request-number }}"
+        run: gh pr merge --delete-branch --rebase --auto "${{ steps.cpr.outputs.pull-request-number }}"
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.BO_PAT }}
