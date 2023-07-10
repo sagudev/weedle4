@@ -28,7 +28,7 @@ jobs:
           title: "WebRef Sync"
           token: ${{ secrets.BO_PAT }}
           author: bo-homu <bo-homu@users.noreply.github.com>
-          commit-message: Sync WebRef to ${{ steps.submodule.outputs.sha }}
+          commit-message: Sync WebRef to https://github.com/w3c/webref/commit/${{ steps.submodule.outputs.sha }}
           branch: webref-sync
           body: |
             WebRef updated to https://github.com/w3c/webref/commit/${{ steps.submodule.outputs.sha }}
