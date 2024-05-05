@@ -54,7 +54,7 @@ ast_types! {
     /// Parses `sequence<Type>`
     struct SequenceType<'a> {
         sequence: term!(sequence),
-        generics: Generics<Box<Type<'a>>>,
+        generics: Generics<Box<AttributedType<'a>>>,
     }
 
     /// Parses `FrozenArray<Type>`
@@ -161,7 +161,7 @@ ast_types! {
     }
 
     /// Parses `[attributes]? type`
-    struct AttributedType<'a> {
+    struct AttributedType<'a> { // TypeWithExtendedAttributes
         attributes: Option<ExtendedAttributeList<'a>>,
         type_: Type<'a>,
     }
