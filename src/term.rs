@@ -114,8 +114,8 @@ generate_terms_for_names! {
     /// Represents the terminal symbol `optional`
     Optional => "optional",
 
-    /// Represents the terminal symbol `async`
-    Async => "async",
+    /// Represents the terminal symbol `async_iterable`
+    AsyncIterable => "async_iterable",
 
     /// Represents the terminal symbol `attribute`
     Attribute => "attribute",
@@ -374,6 +374,9 @@ macro_rules! term {
     };
     (optional) => {
         $crate::term::Optional
+    };
+    (async_iterable) => {
+        $crate::term::AsyncIterable
     };
     (async) => {
         $crate::term::Async
@@ -646,7 +649,7 @@ mod test {
         asterisk, Asterisk, "*";
         or, Or, "or";
         optional, Optional, "optional";
-        async_, Async, "async";
+        async_iterable, AsyncIterable, "async_iterable";
         attribute, Attribute, "attribute";
         callback, Callback, "callback";
         const_, Const, "const";

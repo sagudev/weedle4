@@ -1,6 +1,6 @@
 use crate::argument::ArgumentList;
 use crate::common::{Bracketed, Identifier, Parenthesized, Punctuated};
-use crate::literal::StringLit;
+use crate::literal::*;
 
 /// Parses a list of attributes. Ex: `[ attribute1, attribute2 ]`
 pub type ExtendedAttributeList<'a> = Bracketed<Punctuated<ExtendedAttribute<'a>, term!(,)>>;
@@ -42,12 +42,25 @@ ast_types! {
             assign: term!(=),
             list: term!(*),
         }),
+        #[derive(Copy)]
+        Decimal(struct ExtendedAttributeDecimal<'a> {
+            lhs_identifier: Identifier<'a>,
+            assign: term!(=),
+            rhs: FloatValueLit<'a>,
+        }),
         /// Parses an attribute with an identifier. Ex: `PutForwards=name`
+        /// <https://webidl.spec.whatwg.org/#prod-ExtendedAttributeIdent>
         #[derive(Copy)]
         Ident(struct ExtendedAttributeIdent<'a> {
             lhs_identifier: Identifier<'a>,
             assign: term!(=),
-            rhs: IdentifierOrString<'a>,
+            rhs: Identifier<'a>,
+        }),
+        #[derive(Copy)]
+        String(struct ExtendedAttributeString<'a> {
+            lhs_identifier: Identifier<'a>,
+            assign: term!(=),
+            rhs: StringLit<'a>,
         }),
         /// Parses a plain attribute. Ex: `Replaceable`
         #[derive(Copy)]
@@ -85,7 +98,14 @@ mod test {
         "";
         ExtendedAttributeIdent;
         lhs_identifier.0 == "PutForwards";
-        rhs == IdentifierOrString::Identifier(Identifier("name"));
+        rhs == Identifier("name");
+    });
+
+    test!(should_parse_attribute_decimal { "PutForwards=1.0" =>
+        "";
+        ExtendedAttributeDecimal;
+        lhs_identifier.0 == "PutForwards";
+        rhs == FloatValueLit("1.0");
     });
 
     test!(should_parse_ident_list { "Exposed=(Window,Worker)" =>
